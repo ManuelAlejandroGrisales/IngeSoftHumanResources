@@ -31,10 +31,10 @@
             <label for="estadoCivil">Estado Civil:</label>
             <select id="estadoCivil" required>
                 <option value="">Seleccione una opción</option>
-                <option value="Soltero">Soltero</option>
-                <option value="Casado">Casado</option>
-                <option value="Divorciado">Divorciado</option>
-                <option value="Viudo">Viudo</option>
+                <option value="Solter@">Solter@</option>
+                <option value="Casad@">Casad@</option>
+                <option value="Divorciad@">Divorciad@</option>
+                <option value="Viud@">Viud@</option>
             </select>
         </div>
         <div>
@@ -46,8 +46,24 @@
             <input type="date" id="fechaNacimiento" required>
         </div>
         <div>
+            <label for="Cargo">Cargo:</label>
+            <input type="text" id="Cargo" required/>
+        </div>
+        <div>
             <label for="fechaIngreso">Fecha de Ingreso:</label>
             <input type="date" id="fechaIngreso" required>
+        </div>
+        <div>
+            <label for="Salario">Salario:</label>
+            <input type="text" id="Salario" required/>
+        </div>
+        <div>
+            <label for="HorasExtra">Horas Extras:</label>
+            <input type="text" id="HorasExtra" required/>
+        </div>
+        <div>
+            <label for="newLastName">Arl:</label>
+            <input type="text" id="Arl" required/>
         </div>
         <div>
             <label for="tipoContrato">Tipo de Contrato:</label>
@@ -56,6 +72,19 @@
                 <option value="Indefinido">Indefinido</option>
                 <option value="Temporal">Temporal</option>
             </select>
+        </div>
+        <div >
+            <label for="PruebaDesempeño">Prueba Desempeño:</label>
+            <select id="PruebaDesempeño" required>
+                <option value="">Seleccione una opción</option>
+                <option value="Aprobada">Aprobada</option>
+                <option value="NoAprobada">No Aprobada</option>
+                <option value="Pendiente">Pendiente</option>
+            </select>  
+        </div>
+        <div>
+            <label for="newLastName">Fecha Retiro:</label>
+            <input type="date" id="fecharetiro">
         </div>
         <button type="submit">Guardar Empleado</button>
         <button type="button" onclick="window.location.href='HTML/informacion_empleados.html'" id="ButtonInformacionEmpleados">Info Empleados</button>

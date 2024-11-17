@@ -14,8 +14,13 @@ document.addEventListener('DOMContentLoaded', function () {
         const estadoCivil = document.getElementById('estadoCivil').value.trim();
         const direccion = document.getElementById('direccion').value.trim();
         const fechaNacimiento = document.getElementById('fechaNacimiento').value.trim();
+        const Cargo = document.getElementById('Cargo').value.trim();
         const fechaIngreso = document.getElementById('fechaIngreso').value.trim();
+        const salario = document.getElementById('Salario').value.trim();
+        const HorasExtra = document.getElementById('HorasExtra').value.trim();
+        const Arl = document.getElementById('Arl').value.trim();
         const tipoContrato = document.getElementById('tipoContrato').value.trim();
+        const Pruebadesempeño = document.getElementById('PruebaDesempeño').value.trim();
 
         if (nombre !== '' && apellidos !== '') {
             // Agregar el empleado a la base de datos
@@ -27,8 +32,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 EstadoCivil: estadoCivil,
                 Direccion: direccion,
                 FechaNacimiento: fechaNacimiento,
+                Cargo: Cargo,
                 FechaIngreso: fechaIngreso,
+                Salario: salario,
+                HorasExtras: HorasExtra,
+                Arl: Arl,
                 TipoContrato: tipoContrato,
+                PruebaDesempeño: Pruebadesempeño,
             };
 
             try {

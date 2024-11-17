@@ -27,7 +27,19 @@ document.addEventListener('DOMContentLoaded', function () {
                     employee._id,
                     employee.Cedula,
                     employee.Apellidos,
-                    employee.Nombre
+                    employee.Nombre,
+                    employee.Telefono,
+                    employee.EstadoCivil,
+                    employee.Direccion,
+                    employee.FechaNacimiento,
+                    employee.Cargo,
+                    employee.FechaIngreso,
+                    employee.Salario,
+                    employee.HorasExtras,
+                    employee.Arl,
+                    employee.TipoContrato,
+                    employee.PruebaDesempeño,
+                    employee.FechaRetiro
                 );
             });
 
@@ -52,12 +64,24 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Agrega un empleado a la lista
-    function addEmployeeToList(employeeId, cedula, apellidos, nombre) {
+    function addEmployeeToList(employeeId, cedula, apellidos, nombre, telefono, estadocivil, direccion, fechanacimiento, cargo, fechaingreso, salario, horasextras, arl, tipocontrato, pruebadesempeño, fecharetiro) {
         employees.push({
             id: employeeId,
             cedula,
             apellidos,
             nombre,
+            telefono, 
+            estadocivil, 
+            direccion, 
+            fechanacimiento, 
+            cargo, 
+            fechaingreso, 
+            salario, 
+            horasextras, 
+            arl, 
+            tipocontrato, 
+            pruebadesempeño, 
+            fecharetiro
         });
     }
 
@@ -141,6 +165,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function editEmployee(employeeId) {
         const currentEmployee = employees.find(emp => emp.id === employeeId);
+        //console.log(currentEmployee);
+        //console.log(employeeId)
 
         const editDialog = document.createElement('div');
         editDialog.style.cssText = `
@@ -158,18 +184,85 @@ document.addEventListener('DOMContentLoaded', function () {
         editDialog.innerHTML = `
             <h3>Editar Empleado</h3>
             <div>
+                <label for="newName">Cedula:</label>
+                <input type="text" id="newCedula" value="${currentEmployee.cedula || ''}" />
+            </div>
+            <div style="margin-top: 10px;">
                 <label for="newName">Nombre:</label>
                 <input type="text" id="newName" value="${currentEmployee.nombre || ''}" />
             </div>
+            
             <div style="margin-top: 10px;">
                 <label for="newLastName">Apellidos:</label>
                 <input type="text" id="newLastName" value="${currentEmployee.apellidos || ''}" />
+            </div>
+            <div style="margin-top: 10px;">
+                <label for="newLastName">Telefono:</label>
+                <input type="text" id="newTelefono" value="${currentEmployee.telefono || ''}" />
+            </div>
+            <div style="margin-top: 10px;">
+                <label for="newLastName">Estado Civil:</label>
+                <select id="newEstadoCivil" required>
+                    <option value="Solter@">Solter@</option>
+                    <option value="Casad@">Casad@</option>
+                    <option value="Divorciad@">Divorciad@</option>
+                    <option value="Viud@">Viud@</option>
+                </select>
+            </div>
+            <div style="margin-top: 10px;">
+                <label for="newLastName">Direccion:</label>
+                <input type="text" id="newDireccion" value="${currentEmployee.direccion || ''}" />
+            </div>
+            <div style="margin-top: 10px;">
+                <label for="newLastName">Fecha de Nacimiento:</label>
+                <input type="date" id="newfechaNacimiento" value="${currentEmployee.fechanacimiento || ''}">
+            </div>
+            <div style="margin-top: 10px;">
+                <label for="newLastName">Cargo:</label>
+                <input type="text" id="newCargo" value="${currentEmployee.cargo || ''}" />
+            </div>
+            <div style="margin-top: 10px;">
+                <label for="newLastName">Fecha de Ingreso:</label>
+                <input type="date" id="newfechaIngreso" value="${currentEmployee.fechaingreso || ''}">
+            </div>
+            <div style="margin-top: 10px;">
+                <label for="newLastName">Salario:</label>
+                <input type="text" id="newSalario" value="${currentEmployee.salario || ''}" />
+            </div>
+            <div style="margin-top: 10px;">
+                <label for="newLastName">Horas Extras:</label>
+                <input type="text" id="newHorasExtra" value="${currentEmployee.horasextras || ''}" />
+            </div>
+            <div style="margin-top: 10px;">
+                <label for="newLastName">Arl:</label>
+                <input type="text" id="newArl" value="${currentEmployee.arl || ''}" />
+            </div>
+            <div style="margin-top: 10px;">
+                <label for="newLastName">Tipo de Contrato:</label>
+                <select id="newTipoContrato" required>
+                    <option value="Indefinido">Indefinido</option>
+                    <option value="Temporal">Temporal</option>
+                </select>   
+            </div>
+            <div style="margin-top: 10px;">
+                <label for="newPrueba">Prueba Desempeño:</label>
+                <select id="newPrueba" required>
+                    <option value="Aprobada">Aprobada</option>
+                    <option value="No Aprobada">No Aprobada</option>
+                    <option value="Pendiente">Pendiente</option>
+                </select>  
+            </div>
+            <div style="margin-top: 10px;">
+                <label for="newLastName">Fecha Retiro:</label>
+                <input type="date" id="newfechaRetiro" value="${currentEmployee.fecharetiro || ''}">
             </div>
             <div style="margin-top: 15px;">
                 <button id="saveBtn">Guardar</button>
                 <button id="cancelBtn">Cancelar</button>
             </div>
         `;
+ 
+        
 
         const overlay = document.createElement('div');
         overlay.style.cssText = `
@@ -185,15 +278,55 @@ document.addEventListener('DOMContentLoaded', function () {
         document.body.appendChild(overlay);
         document.body.appendChild(editDialog);
 
+        
+        //************************** */
+
+        //LLenar las variables que son dropdown con el valor ya en la base de datos
+        let VariableOptions = [currentEmployee.estadocivil, "newEstadoCivil", currentEmployee.tipocontrato, "newTipoContrato", currentEmployee.pruebadesempeño, "newPrueba"];
+
+        
+        for (let index = 0; index < VariableOptions.length; index+=2) {
+            selectElement(VariableOptions[index], VariableOptions[index+1]);
+        }
+
+        function selectElement(valueToSelect, id) {  
+            //console.log(id);  
+            //console.log(valueToSelect);
+            let element = document.getElementById(id);
+            //console.log(element);
+            element.value = valueToSelect;
+            //console.log("ready"); 
+            //console.log("**************************************************************************"); 
+        }
+
+        /******************** */
+
         const saveBtn = editDialog.querySelector('#saveBtn');
         const cancelBtn = editDialog.querySelector('#cancelBtn');
 
         saveBtn.addEventListener('click', () => {
             const newName = editDialog.querySelector('#newName').value.trim();
             const newLastName = editDialog.querySelector('#newLastName').value.trim();
+            const newcedula = editDialog.querySelector('#newCedula').value.trim();
+            const newtelefono = editDialog.querySelector('#newTelefono').value.trim();
+            const newEstadoCivil = editDialog.querySelector('#newEstadoCivil').value.trim();
+            const newDireccion = editDialog.querySelector('#newDireccion').value.trim();
+            const newfechaNacimiento = editDialog.querySelector('#newfechaNacimiento').value.trim();
+            const newCargo = editDialog.querySelector('#newCargo').value.trim();
+            const newfechaIngreso = editDialog.querySelector('#newfechaIngreso').value.trim();
+            const newSalario = editDialog.querySelector('#newSalario').value.trim();
+            const newHorasExtra = editDialog.querySelector('#newHorasExtra').value.trim();
+            const newArl = editDialog.querySelector('#newArl').value.trim();
+            const newTipoContrato = editDialog.querySelector('#newTipoContrato').value.trim();
+            const newPrueba = editDialog.querySelector('#newPrueba').value.trim();
+            const newfechaRetiro = editDialog.querySelector('#newfechaRetiro').value.trim();
+
+
 
             if (newName !== '' && newLastName !== '') {
-                updateEmployeeData(employeeId, newName, newLastName);
+                console.log("Modified Data:");
+                console.log([employeeId, newName, newLastName, newcedula, newtelefono, newEstadoCivil, newDireccion, newfechaNacimiento, newCargo, newfechaIngreso, newSalario, newHorasExtra, newArl, newTipoContrato, newPrueba, newfechaRetiro]);
+                updateEmployeeData(employeeId, newName, newLastName, newcedula, newtelefono, newEstadoCivil, newDireccion, newfechaNacimiento, newCargo, newfechaIngreso, newSalario, newHorasExtra, newArl, newTipoContrato, newPrueba, newfechaRetiro);
                 closeDialog();
             } else {
                 alert('Por favor complete todos los campos');
@@ -208,7 +341,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    async function updateEmployeeData(employeeId, newName, newLastName) {
+    async function updateEmployeeData(employeeId, newName, newLastName, newcedula, newtelefono, newEstadoCivil, newDireccion, newfechaNacimiento, newCargo, newfechaIngreso, newSalario, newHorasExtra, newArl, newTipoContrato, newPrueba, newfechaRetiro) {
         try {
             const response = await fetch(`/data/${employeeId}`, {
                 method: 'PUT',
@@ -216,20 +349,32 @@ document.addEventListener('DOMContentLoaded', function () {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    Nombre: newName,
+                    Cedula: newcedula,
                     Apellidos: newLastName,
+                    Nombre: newName,
+                    Telefono: newtelefono, 
+                    EstadoCivil: newEstadoCivil,
+                    Direccion: newDireccion,
+                    FechaNacimiento: newfechaNacimiento,
+                    Cargo: newCargo,
+                    FechaIngreso: newfechaIngreso,
+                    Salario: newSalario,
+                    HorasExtras: newHorasExtra,
+                    Arl: newArl,
+                    TipoContrato: newTipoContrato,
+                    PruebaDesempeño: newPrueba,
                 }),
             });
 
             const result = await response.json();
-            if (result.message === 'Empleado actualizado con éxito') {
+            /*if (result.message === 'Empleado actualizado con éxito') {
                 employees = employees.map(emp =>
                     emp.id === employeeId
                         ? { ...emp, nombre: newName, apellidos: newLastName }
                         : emp
                 );
                 renderEmployeeTable();
-            }
+            }*/
         } catch (error) {
             console.error('Error updating employee data:', error);
         }
