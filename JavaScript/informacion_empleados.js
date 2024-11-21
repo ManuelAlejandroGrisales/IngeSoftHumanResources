@@ -28,7 +28,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     employee.Cedula,
                     employee.Apellidos,
                     employee.Nombre,
-                    employee.Telefono
+                    employee.Telefono,
+                    employee.Cargo,
+                    employee.Direccion,
+                    employee.FechaIngreso,
+                    employee.TipoContrato,
+                    employee.Salario,
+                    employee.Arl
                 );
             });
 
@@ -53,14 +59,29 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Agrega un empleado a la lista
-    function addEmployeeToList(employeeId, cedula, apellidos, nombre, telefono) {
+    function addEmployeeToList(employeeId, cedula, apellidos, nombre, telefono, cargo, direccion, fechaingreso, tipocontrato, salario, arl) {
         employees.push({
             id: employeeId,
             cedula,
             apellidos,
             nombre,
-            telefono
+            telefono,
+            cargo,
+            direccion,
+            fechaingreso,
+            tipocontrato,
+            salario,
+            arl
         });
+    }
+
+    function getCurrentDate() {
+        const today = new Date();
+        const year = today.getFullYear().toString().slice(-2); // Get last 2 digits of year
+        const month = (today.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-based
+        const day = today.getDate().toString().padStart(2, '0');
+        
+        return `${year}-${month}-${day}`;
     }
 
     // Agrega un empleado a la base de datos y la página
@@ -133,101 +154,109 @@ document.addEventListener('DOMContentLoaded', function () {
          }
      }
     
-    async function Send_dataEmployee(employeeId) {
+    async function Send_dataEmployee(employeeId, selector) {
         const currentEmployee = employees.find(emp => emp.id === employeeId);
         // Datos de prueba básicos (puedes modificar esto para usar un ID específico)
+        fechaactual=getCurrentDate()
         const data = {
             nombre: currentEmployee.nombre || "",
             apellidos: currentEmployee.apellidos || "",
             cedula: currentEmployee.cedula || "",
             telefono: currentEmployee.telefono || "",
-        };
+            direccion: currentEmployee.direccion || "",
+            cargo: currentEmployee.cargo || "",
+            fechaingreso: currentEmployee.fechaingreso || "",
+            tipocontrato:currentEmployee.tipocontrato || "",
+            salario:currentEmployee.salario || "",
+            arl:currentEmployee.arl || "",
+            selector:selector,
+            fechaactual:fechaactual
 
-        console.log("Datos enviados al servidor:", JSON.stringify(data, null, 2));
-    
+        };
+        
+        
+        console.log(JSON.stringify(data))
+        
         try {
             // Realiza la solicitud POST al servidor
-            const response = await fetch("http://localhost:8000/informacion_empleados", {
+            const response = await fetch("http://localhost:8000/documentos", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(data),
             });
-    
+            
             // Verifica si la respuesta fue exitosa
             if (!response.ok) {
                 throw new Error(`Error en la solicitud: ${response.statusText}`);
             }
-    
+            
             // Convierte la respuesta a JSON
-            const responseData = await response.json();
-    
+            
+            
             // Muestra los datos recibidos del servidor
-            console.log("Respuesta del servidor:", responseData);
+            
             alert("Conexión exitosa con el servidor.");
+            
         } catch (error) {
             console.error("Error al intentar conectarse con el servidor:", error);
             alert("Hubo un problema al conectar con el servidor.");
         }
     }
     
-    //  async function Send_dataEmployee(employeeId) {
-    //     // Encuentra el empleado por ID
-    //     const currentEmployee = employees.find(emp => emp.id === employeeId);
-    
-    //     // Preparar datos
-    //     const data = {
-    //         nombre: currentEmployee.nombre || "",
-    //         apellidos: currentEmployee.apellidos || "",
-    //         cedula: currentEmployee.cedula || "",
-    //         FechaIngreso: currentEmployee.FechaIngreso || "",
-    //         TipoContrato: currentEmployee.TipoContrato || "",
-    //     };
-    
-    //     console.log("Datos enviados al servidor:", data); // Debugging
-    
-    //     try {
-    //         // Realiza la solicitud POST al servidor
-    //         const response = await fetch("http://localhost:8000/informacion_empleados", {
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //             },
-    //             body: JSON.stringify(data),
-    //         });
-    
-    //         // Convierte la respuesta a un Blob
-    //         const blob = await response.blob();
-    
-    //         // Crea una URL temporal para el Blob
-    //         const url = window.URL.createObjectURL(blob);
-    
-    //         // Crea un elemento <a> para descargar el archivo
-    //         const a = document.createElement("a");
-    //         a.href = url;
-    //         // a.download = "contrato_modificado.docx"; // Nombre del archivo descargado
-    //         // document.body.appendChild(a); // Añade temporalmente el elemento al DOM
-    //         // a.click(); // Simula el clic para descargar
-    //         // document.body.removeChild(a); // Elimina el elemento después de descargar
-    
-    //         // Libera la URL temporal
-    //         window.URL.revokeObjectURL(url);
-    
-    //         alert("Contrato generado y descargado exitosamente.");
-    //     } catch (error) {
-    //         console.error("Error al intentar generar el contrato:", error);
-    //         alert("Hubo un problema al generar el contrato.");
-    //     }
-    // }
-    
-
     // Función para eliminar un empleado
     function deleteEmployee(employeeId) {
         removeEmployeeFromDatabase(employeeId);
     }
 
-
+    function searchEmployees() {
+        const searchTerm = document.getElementById('employeeSearch').value.toLowerCase();
+        const filteredEmployees = employees.filter(emp => 
+            emp.nombre.toLowerCase().includes(searchTerm) ||
+            emp.apellidos.toLowerCase().includes(searchTerm) ||
+            emp.cedula.toLowerCase().includes(searchTerm) ||
+            emp.cargo.toLowerCase().includes(searchTerm)
+        );
+        
+        // Clear the current table
+        employeeTableBody.innerHTML = '';
+        
+        // Render filtered results
+        filteredEmployees.forEach(emp => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${emp.nombre || 'N/A'}</td>
+                <td>${emp.apellidos || 'N/A'}</td>
+                <td>
+                    <button class="edit">Editar</button>
+                    <button class="delete">Eliminar</button>
+                    <button class="generate">Contrato</button>
+                    <button class="afiliation">Afiliacion</button>
+                    <button class="certificate">Certificado</button>
+                </td>
+            `;
+    
+            // Add event listeners
+            const editBtn = row.querySelector('.edit');
+            const deleteBtn = row.querySelector('.delete');
+            const generateBtn = row.querySelector('.generate');
+            const afiliationBtn = row.querySelector('.afiliation');
+            const certificateBtn = row.querySelector('.certificate');
+    
+            editBtn.addEventListener('click', () => editEmployee(emp.id));
+            deleteBtn.addEventListener('click', () => deleteEmployee(emp.id));
+            generateBtn.addEventListener('click', () => Send_dataEmployee(emp.id, '1'));
+            afiliationBtn.addEventListener('click', () => Send_dataEmployee(emp.id, '2'));
+            certificateBtn.addEventListener('click', () => Send_dataEmployee(emp.id, '3'));
+    
+            employeeTableBody.appendChild(row);
+        });
+    }
+    
+    // Add real-time search capability
+    document.getElementById('employeeSearch').addEventListener('input', searchEmployees);
+    
     function editEmployee(employeeId) {
         const currentEmployee = employees.find(emp => emp.id === employeeId);
 
@@ -335,16 +364,22 @@ document.addEventListener('DOMContentLoaded', function () {
                     <button class="edit">Editar</button>
                     <button class="delete">Eliminar</button>
                     <button class="generate">Contrato</button>
+                    <button class="afiliation">Afiliacion</button>
+                    <button class="certificate">Certificado</button>
                 </td>
             `;
 
             const editBtn = row.querySelector('.edit');
             const deleteBtn = row.querySelector('.delete');
             const generateBtn = row.querySelector('.generate');
+            const afiliationBtn = row.querySelector('.afiliation');
+            const certificateBtn = row.querySelector('.certificate');
 
             editBtn.addEventListener('click', () => editEmployee(emp.id));
             deleteBtn.addEventListener('click', () => deleteEmployee(emp.id));
-            generateBtn.addEventListener('click',() => Send_dataEmployee(emp.id)); 
+            generateBtn.addEventListener('click',() => Send_dataEmployee(emp.id, '1')); 
+            afiliationBtn.addEventListener('click',() => Send_dataEmployee(emp.id, '2')); 
+            certificateBtn.addEventListener('click',() => Send_dataEmployee(emp.id, '3')); 
                 
             employeeTableBody.appendChild(row);
         });
