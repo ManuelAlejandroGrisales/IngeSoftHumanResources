@@ -39,8 +39,21 @@ async function getCollection() {
 app.put('/data/:id', async (req, res) => {
   const { id } = req.params; // Obtiene el ID del empleado desde los parámetros de la ruta
   const updatedData = {
-      Nombre: req.body.Nombre,
-      Apellidos: req.body.Apellidos,
+        Nombre: req.body.Nombre,
+        Apellidos: req.body.Apellidos,
+        Cedula: req.body.Cedula,
+        Telefono: req.body.Telefono,
+        EstadoCivil: req.body.EstadoCivil,
+        Direccion: req.body.Direccion,
+        FechaNacimiento: req.body.FechaNacimiento,
+        Cargo: req.body.Cargo,
+        FechaIngreso: req.body.FechaIngreso,
+        Salario: req.body.Salario,
+        HorasExtras: req.body.HorasExtras,
+        Arl: req.body.Arl,
+        TipoContrato: req.body.TipoContrato,
+        PruebaDesempeño: req.body.PruebaDesempeño,
+        FechaRetiro: req.body.FechaRetiro
   };
 
   try {
